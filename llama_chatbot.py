@@ -5,7 +5,8 @@ from transformers import AutoTokenizer
 import os
 from huggingface_hub import login
 
-MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"  
+#MODEL_ID = "meta-llama/Meta-Llama-3-8B-Instruct"  
+MODEL_ID = "meta-llama/Llama-3.2-3B-Instruct"
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class LLAMA_Chat:
@@ -32,7 +33,7 @@ class LLAMA_Chat:
         )
 
     def ask(self, input_data):
-        system_message = "You are a helpful chatbot."
+        system_message = "You are a cognitive neurologist."
         formatted_chat = [
             {"role": "system", "content": system_message},
             {"role": "user", "content": f"{input_data}"},
@@ -63,10 +64,17 @@ if __name__ == "__main__":
     print("\n LLaMA-3 Chat is ready! Type your question (type 'exit' to quit):\n")
 
     while True:
-        user_input = input("User: ").strip()
+        user_input = input("Doc Path: ").strip()
         if user_input.lower() in ["exit", "quit"]:
             print("Goodbye!")
             break
 
-        answer = bot.ask(user_input)
-        print("Bot:", answer)
+        with open(user_input) as fin:
+            all_text_list = fin.readlines()
+        all_text = '\n'.join(all_text_list)
+        
+
+        print(all_text)
+        print("Model answer from here:-----------------------")
+        answer = bot.ask(all_text)
+        print(answer)
